@@ -1,32 +1,11 @@
 package com.product.repository;
 
-import org.springframework.stereotype.Repository;
 import com.product.entity.Prodotto;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
-import java.util.ArrayList;
 
-@Repository
-public class ProdottoRepository {
-    private final List<Prodotto> prodotti = new ArrayList<>();
+public interface ProdottoRepository extends JpaRepository<Prodotto, Long> {
 
-    public void salva(Prodotto prodotto) {
-        prodotti.add(prodotto);
-    }
-
-    public List<Prodotto> trovaTutti() {
-        return new ArrayList<>(prodotti);
-    }
-
-    public List<Prodotto> trovaPerCategoria(String categoria) {
-        return prodotti.stream()
-                .filter(p -> p.getCategoria().equalsIgnoreCase(categoria))
-                .toList();
-    }
-
-    public Prodotto trovaPerId (int id) {
-        return prodotti.stream()
-                .filter(p -> p.getId() == id)
-                .findFirst()
-                .orElse(null);
-    }
+        List<Prodotto> findByCategoriaId(Long categoriaId);
 }

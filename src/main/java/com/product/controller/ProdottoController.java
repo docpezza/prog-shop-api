@@ -4,9 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.product.service.ProdottoService;
 import com.product.entity.Prodotto;
-import com.product.exception.ProdottoNonTrovatoException;
-import com.product.repository.ProdottoRepository;
 import com.product.dto.ProdottoRequest;
+import com.product.dto.ProdottoResponse;
+
 import java.util.List;
 import jakarta.validation.Valid;
 
@@ -14,37 +14,57 @@ import jakarta.validation.Valid;
 @RequestMapping("/prodotti")
 public class ProdottoController {
     private final ProdottoService service;
-    private final ProdottoRepository repository;
 
-    public ProdottoController(ProdottoService service, ProdottoRepository repository) {
+    public ProdottoController(ProdottoService service) {
         this.service = service;
-        this.repository = repository;
     }
 
     @GetMapping
-    public List<Prodotto> getAllProdotti() {
-        return service.getTuttiProdotti();
-    }
-
-    @GetMapping("/categoria/{categoria}")
-    public List<Prodotto> getProdottoPerCategoria(@PathVariable String categoria) {
-        return service.getProdottiPerCategoria(categoria);
+    public ResponseEntity<List<ProdottoResponse>> getAllProdotti() {
+        return ResponseEntity.ok(service.getTuttiProdotti().stream()
+                .map(this::convertToResponse)
+                .toList());
     }
 
     @GetMapping("/{id}")
-    public Prodotto getProdottoPerId(int id) {
-    Prodotto prodotto = repository.trovaPerId(id);
-
-    if (prodotto == null) {
-        throw new ProdottoNonTrovatoException("Prodotto con id " + id + " non trovato");
+        public ResponseEntity<ProdottoResponse> getProdottoPerId(@PathVariable Long id) {
+        Prodotto prodotto = service.getProdottoPerId(id);
+        ProdottoResponse response = convertToResponse(prodotto);
+        return ResponseEntity.ok(response);
     }
 
-    return prodotto;
-}
+    @GetMapping("/categoria/{categoriaId}")
+    public ResponseEntity<List<ProdottoResponse>> getProdottiPerCategoria(@PathVariable Long categoriaId) {
+        return ResponseEntity.ok(service.getProdottiPerCategoria(categoriaId).stream()
+                .map(this::convertToResponse)
+                .toList());
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProdottoResponse> updateProdotto(@PathVariable Long id, @Valid @RequestBody ProdottoRequest request) {
+        Prodotto prodottoAggiornato = service.updateProdotto(id, request);
+        return ResponseEntity.ok(convertToResponse(prodottoAggiornato));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProdotto(@PathVariable Long id) {
+        service.deleteProdotto(id);
+        return ResponseEntity.noContent().build();
+    }
+
 
     @PostMapping
     public ResponseEntity<String> aggiungiProdotto(@Valid @RequestBody ProdottoRequest request) {
-    service.aggiungiProdotto(request.toProdotto());
+    service.aggiungiProdotto(request);
     return ResponseEntity.status(201).body("Prodotto aggiunto correttamente");
+    }
+
+    private ProdottoResponse convertToResponse(Prodotto prodotto) {
+        return new ProdottoResponse(
+                prodotto.getId(),
+                prodotto.getNome(),
+                prodotto.getPrezzo(),
+                prodotto.getCategoria().getNome()
+        );
     }
 }

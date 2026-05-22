@@ -1,19 +1,38 @@
 package com.product.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "prodotti")
 public class Prodotto {
-    private int id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String nome;
     private double prezzo;
-    private String categoria;
 
-    public Prodotto(int id, String nome, double prezzo, String categoria) {
-        this.id = id;
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
+
+    public Prodotto() {
+    }
+
+    public Prodotto( String nome, double prezzo, Categoria categoria) {
         this.nome = nome;
         this.prezzo = prezzo;
         this.categoria = categoria;
     }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
@@ -25,11 +44,11 @@ public class Prodotto {
         return prezzo;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -41,7 +60,7 @@ public class Prodotto {
         this.prezzo = prezzo;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 }

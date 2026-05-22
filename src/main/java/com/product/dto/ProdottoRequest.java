@@ -1,8 +1,7 @@
 package com.product.dto;
 
-import com.product.entity.Prodotto;
-
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 public class ProdottoRequest {
@@ -10,8 +9,8 @@ public class ProdottoRequest {
     private String nome;
     @Positive(message = "Il prezzo deve essere un numero positivo")
     private double prezzo;
-    @NotBlank(message = "La categoria del prodotto è obbligatoria")
-    private String categoria;
+    @NotNull(message = "La categoria del prodotto è obbligatoria")
+    private Long categoriaId;
 
     public ProdottoRequest() {
     }
@@ -24,8 +23,8 @@ public class ProdottoRequest {
         return prezzo;
     }
 
-    public String getCategoria() {
-        return categoria;
+    public Long getCategoriaId() {
+        return categoriaId;
     }
 
     public void setNome(String nome) {
@@ -36,16 +35,7 @@ public class ProdottoRequest {
         this.prezzo = prezzo;
     }
 
-    public void setCategoria(String categoria) {
-        this.categoria = categoria;
-    }
-
-    public Prodotto toProdotto() {
-    return new Prodotto(
-        0,
-        this.nome,
-        this.prezzo,
-        this.categoria
-    );
+    public void setCategoriaId(Long categoriaId) {
+        this.categoriaId = categoriaId;
     }
 }

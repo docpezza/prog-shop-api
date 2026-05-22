@@ -6,8 +6,9 @@ import org.springframework.http.ResponseEntity;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler
-    public ResponseEntity<String> handleProdottoNonTrovato(ProdottoNonTrovatoException ex) {
-        return ResponseEntity.status(404).body(ex.getMessage());
+    @ExceptionHandler(ProdottoNonTrovatoException.class)
+    public ResponseEntity<ErrorResponse> handleProdottoNonTrovato(ProdottoNonTrovatoException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), 404);
+        return ResponseEntity.status(404).body(errorResponse);
     }
 }
