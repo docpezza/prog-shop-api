@@ -11,4 +11,10 @@ public class GlobalExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), 404);
         return ResponseEntity.status(404).body(errorResponse);
     }
+
+    @ExceptionHandler(CategoriaNonTrovataException.class)
+    public ResponseEntity<ErrorResponse> handleCategoriaNonTrovata(CategoriaNonTrovataException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), 404);
+        return ResponseEntity.status(404).body(errorResponse);
+    }
 }

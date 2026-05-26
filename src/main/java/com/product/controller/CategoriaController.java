@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.product.service.CategoriaService;
 import com.product.entity.Categoria;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.product.dto.CategoriaRequest;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/categorie")
@@ -38,5 +41,17 @@ public class CategoriaController {
     public ResponseEntity<String> creaCategoria(@Valid @RequestBody CategoriaRequest request) {
         service.creaCategoria(request.getNome());
         return ResponseEntity.status(201).body("Categoria creata correttamente");
+    }
+
+    @PutMapping("/{id}")
+    public String putMethodName(@PathVariable Long id, @Valid @RequestBody CategoriaRequest request) {
+        service.aggiornaCategoria(id, request);
+        return "Categoria aggiornata correttamente";
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategoria(@PathVariable Long id) {
+        service.eliminaCategoria(id);
+        return ResponseEntity.noContent().build();
     }
 }
