@@ -31,7 +31,7 @@ public class CategoriaService {
                 .orElseThrow(() -> new CategoriaNonTrovataException("Categoria non trovata con id: " + id));
     }
 
-    public Categoria aggiornaCategoria(Long id, CategoriaRequest request){
+    public Categoria updateCategoria(Long id, CategoriaRequest request){
         Categoria categoria = getCategoriaPerId(id);
         categoria.setNome(request.getNome());
         return repository.save(categoria);
