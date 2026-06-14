@@ -30,7 +30,7 @@ public class CategoriaController {
     public ResponseEntity<List<CategoriaResponse>> getTutteCategorie() {
         return ResponseEntity.ok(service.getTutteCategorie().stream()
                 .map(this::convertToResponse)
-                .collect(java.util.stream.Collectors.toList()));
+                .toList());
     }
 
     @GetMapping("/{id}")
@@ -40,9 +40,9 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<String> creaCategoria(@Valid @RequestBody CategoriaRequest request) {
-        service.creaCategoria(request.getNome());
-        return ResponseEntity.status(201).body("Categoria creata correttamente");
+    public ResponseEntity<CategoriaResponse> creaCategoria(@Valid @RequestBody CategoriaRequest request) {
+        Categoria categoria = service.creaCategoria(request.getNome());
+        return ResponseEntity.status(201).body(convertToResponse(categoria));
     }
 
     @PutMapping("/{id}")

@@ -54,9 +54,9 @@ public class ProdottoController {
 
 
     @PostMapping
-    public ResponseEntity<String> aggiungiProdotto(@Valid @RequestBody ProdottoRequest request) {
-    service.aggiungiProdotto(request);
-    return ResponseEntity.status(201).body("Prodotto aggiunto correttamente");
+    public ResponseEntity<ProdottoResponse> aggiungiProdotto(@Valid @RequestBody ProdottoRequest request) {
+    Prodotto prodotto = service.aggiungiProdotto(request);
+    return ResponseEntity.status(201).body(convertToResponse(prodotto));
     }
 
     private ProdottoResponse convertToResponse(Prodotto prodotto) {
