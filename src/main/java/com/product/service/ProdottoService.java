@@ -7,6 +7,7 @@ import com.product.entity.Prodotto;
 import com.product.entity.Categoria;
 import com.product.exception.ProdottoNonTrovatoException;
 import com.product.dto.ProdottoRequest;
+import com.product.exception.CategoriaNonTrovataException;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class ProdottoService {
 
     public Prodotto aggiungiProdotto(ProdottoRequest request) {
         Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
-                .orElseThrow(() -> new RuntimeException("Categoria non trovata"));
+                .orElseThrow(() -> new CategoriaNonTrovataException("Categoria non trovata con id: " + request.getCategoriaId()));
 
         Prodotto prodotto = new Prodotto(
                 request.getNome(),
@@ -47,8 +48,7 @@ public class ProdottoService {
         Prodotto prodottoEsistente = getProdottoPerId(id);
 
         Categoria categoria = categoriaRepository.findById(request.getCategoriaId())
-                .orElseThrow(() -> new RuntimeException("Categoria non trovata"));
-
+                .orElseThrow(() -> new CategoriaNonTrovataException("Categoria non trovata con id: " + request.getCategoriaId()));
         prodottoEsistente.setNome(request.getNome());
         prodottoEsistente.setPrezzo(request.getPrezzo());
         prodottoEsistente.setCategoria(categoria);
